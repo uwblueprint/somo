@@ -1,0 +1,7 @@
+Google application created on uw blueprint creds for OAuth
+
+OAuth Client
+Here is your client ID
+572901801346-agcue25fuqh71ocj6u91eqih4psdp1n3.apps.googleusercontent.com
+Here is your client secret
+SXX64wVn8mePI_OshMhmOmis
