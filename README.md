@@ -1,5 +1,7 @@
 #Somo
 
+[![CircleCI](https://circleci.com/gh/uwblueprint/somo.svg?style=svg)](https://circleci.com/gh/uwblueprint/somo)
+
 ## Development
 
 Development is typically done on a local machine with local instances of various services (data stores, email sender, etc).
