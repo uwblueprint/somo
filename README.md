@@ -23,9 +23,13 @@ If it doesn't exist, create a file `configs/secrets.yml`and add the following ke
 ```
 development:
   secret_key_base: <your_secret_key>
+  twilio_account_id: <twilio_account_id>
+  twilio_auth_token: <twilio_auth_token>
+  somo_phone_number: <somo_phone_number>
 
 ```
 Use `rake secret` to generate a secret keys.
+Access the docs [here](https://docs.google.com/document/d/1X9D7-7yff8MpFdnh_rXd4MUGDJMFzJ8EbW6eJQNKz1Q/edit?usp=sharing) for the dev and test keys.
 
 ### Set up Postgres
 
