@@ -22,19 +22,8 @@ We are currently running on Ruby 2.3, Rails 4, and PostgreSQL 9.4. [Homebrew](ht
   $ pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start
   $ pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log status
   ```
-4. Start an interactive terminal via:
+  There are some settings to make it start by default as well.
   
-  ```
-  $ psql postgres # won't work until you migrate the database with the instructions below
-  ```
-
-5. Create the development and test databases:
- 
-  ```
-  create database somo_development;
-  create database somo_test;
-  ```
-
 `\q + ENTER` in terminal to quit interactive terminal
 
 
@@ -50,7 +39,9 @@ We are currently running on Ruby 2.3, Rails 4, and PostgreSQL 9.4. [Homebrew](ht
     somo_phone_number: <somo_phone_number>
   ```
   Use `rake secret` to generate secret keys. Access the docs [here](https://docs.google.com/document/d/1X9D7-7yff8MpFdnh_rXd4MUGDJMFzJ8EbW6eJQNKz1Q/edit?usp=sharing) for API dev and test keys.
+  
+4. `rake db:create` to create the databases.
 
-4. `rake db:migrate` to create the tables in the database.
+5. `rake db:migrate` to run migrations (creating the tables and their associations).
 
-5. `rails server` and go to `localhost:3000`
+6. `rails server` and go to `localhost:3000`
