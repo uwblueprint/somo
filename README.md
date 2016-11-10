@@ -45,3 +45,5 @@ We are currently running on Ruby 2.3, Rails 4, and PostgreSQL 9.4. [Homebrew](ht
 5. `rake db:migrate` to run migrations (creating the tables and their associations).
 
 6. `rails server` and go to `localhost:3000`
+
+7. Run `rspec` in the root directory to run the specs.
