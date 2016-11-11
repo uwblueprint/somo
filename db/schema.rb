@@ -11,9 +11,88 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 0) do
+ActiveRecord::Schema.define(version: 20161110200524) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "question_orders", force: :cascade do |t|
+    t.integer  "survey_id"
+    t.integer  "question_id"
+    t.integer  "next_question_id"
+    t.integer  "response_choice_id"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+  end
+
+  add_index "question_orders", ["next_question_id"], name: "index_question_orders_on_next_question_id", using: :btree
+  add_index "question_orders", ["question_id"], name: "index_question_orders_on_question_id", using: :btree
+  add_index "question_orders", ["response_choice_id"], name: "index_question_orders_on_response_choice_id", using: :btree
+  add_index "question_orders", ["survey_id"], name: "index_question_orders_on_survey_id", using: :btree
+
+  create_table "questions", force: :cascade do |t|
+    t.text     "text"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.string   "question_type"
+  end
+
+  create_table "respondents", force: :cascade do |t|
+    t.string   "name"
+    t.string   "phone_number"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
+  create_table "response_choices", force: :cascade do |t|
+    t.string   "key"
+    t.text     "text"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.integer  "question_id"
+  end
+
+  add_index "response_choices", ["question_id"], name: "index_response_choices_on_question_id", using: :btree
+
+  create_table "responses", force: :cascade do |t|
+    t.integer  "survey_response_id"
+    t.integer  "question_id"
+    t.integer  "respondent_id"
+    t.text     "answer"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+  end
+
+  add_index "responses", ["question_id"], name: "index_responses_on_question_id", using: :btree
+  add_index "responses", ["respondent_id"], name: "index_responses_on_respondent_id", using: :btree
+  add_index "responses", ["survey_response_id"], name: "index_responses_on_survey_response_id", using: :btree
+
+  create_table "survey_responses", force: :cascade do |t|
+    t.integer  "survey_id"
+    t.integer  "respondent_id"
+    t.datetime "completed_at"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
+  add_index "survey_responses", ["respondent_id"], name: "index_survey_responses_on_respondent_id", using: :btree
+  add_index "survey_responses", ["survey_id"], name: "index_survey_responses_on_survey_id", using: :btree
+
+  create_table "surveys", force: :cascade do |t|
+    t.string   "name"
+    t.text     "description"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_foreign_key "question_orders", "questions"
+  add_foreign_key "question_orders", "questions", column: "next_question_id"
+  add_foreign_key "question_orders", "response_choices"
+  add_foreign_key "question_orders", "surveys"
+  add_foreign_key "response_choices", "questions"
+  add_foreign_key "responses", "questions"
+  add_foreign_key "responses", "respondents"
+  add_foreign_key "responses", "survey_responses"
+  add_foreign_key "survey_responses", "respondents"
+  add_foreign_key "survey_responses", "surveys"
 end
