@@ -13,5 +13,8 @@ class Respondent < ActiveRecord::Base
   has_many :survey_responses
   has_many :responses
 
-  validates :name, :phone_number, presence: true
+  # Normalizes the attribute itself before validation
+  phony_normalize :phone_number
+
+  validates_plausible_phone :phone_number, presence: true
 end

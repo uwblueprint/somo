@@ -7,6 +7,8 @@ gem 'rails', '4.2.7.1'
 gem 'pg', '~> 0.15'
 # Twilio
 gem 'twilio-ruby'
+# Validate, display and save phone numbers https://github.com/joost/phony_rails
+gem 'phony_rails'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'

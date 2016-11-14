@@ -84,6 +84,10 @@ GEM
     nokogiri (1.6.8.1)
       mini_portile2 (~> 2.1.0)
     pg (0.19.0)
+    phony (2.15.34)
+    phony_rails (0.14.4)
+      activesupport (>= 3.0)
+      phony (~> 2.15)
     rack (1.6.4)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -181,6 +185,7 @@ DEPENDENCIES
   jbuilder (~> 2.0)
   jquery-rails
   pg (~> 0.15)
+  phony_rails
   rails (= 4.2.7.1)
   rspec-rails
   sass-rails (~> 5.0)
