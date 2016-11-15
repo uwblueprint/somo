@@ -30,7 +30,7 @@ We are currently running on Ruby 2.3, Rails 4, and PostgreSQL 9.4. [Homebrew](ht
 ### Set up Rails
 1. Install and manage Ruby versions with [rvm](http://rvm.io/). Make sure to install the correct Ruby version, which is specified in the [Gemfile]
 2. `bundle install` to install dependencies
-3. Create a file `configs/secrets.yml`and add the following keys:
+3. Create a file `config/secrets.yml`and add the following keys:
   ```
   development:
     secret_key_base: <your_secret_key>
