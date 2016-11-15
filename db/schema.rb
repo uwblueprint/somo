@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161113060550) do
+ActiveRecord::Schema.define(version: 20161114193937) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -69,6 +69,18 @@ ActiveRecord::Schema.define(version: 20161113060550) do
   add_index "responses", ["respondent_id"], name: "index_responses_on_respondent_id", using: :btree
   add_index "responses", ["survey_response_id"], name: "index_responses_on_survey_response_id", using: :btree
 
+  create_table "survey_execution_states", force: :cascade do |t|
+    t.integer  "respondent_id"
+    t.integer  "question_id"
+    t.integer  "survey_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
+  add_index "survey_execution_states", ["question_id"], name: "index_survey_execution_states_on_question_id", using: :btree
+  add_index "survey_execution_states", ["respondent_id"], name: "index_survey_execution_states_on_respondent_id", using: :btree
+  add_index "survey_execution_states", ["survey_id"], name: "index_survey_execution_states_on_survey_id", using: :btree
+
   create_table "survey_responses", force: :cascade do |t|
     t.integer  "survey_id"
     t.integer  "respondent_id"
@@ -95,6 +107,9 @@ ActiveRecord::Schema.define(version: 20161113060550) do
   add_foreign_key "responses", "questions"
   add_foreign_key "responses", "respondents"
   add_foreign_key "responses", "survey_responses"
+  add_foreign_key "survey_execution_states", "questions"
+  add_foreign_key "survey_execution_states", "respondents"
+  add_foreign_key "survey_execution_states", "surveys"
   add_foreign_key "survey_responses", "respondents"
   add_foreign_key "survey_responses", "surveys"
 end
