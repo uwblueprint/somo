@@ -1,7 +1,16 @@
 Rails.application.routes.draw do
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
-  post 'sms/received_user_response' => 'sms#received_user_response'
+
+  # Twilio makes a HTTP request to this endpoint which goes to our sms controller
+  post 'sms/received_user_response' => :received_user_response, controller: 'sms'
+
+  # Survey Routes
+  resources :surveys do
+    member do
+      post 'send_survey'
+    end
+  end
 
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
