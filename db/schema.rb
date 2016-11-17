@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161114193937) do
+ActiveRecord::Schema.define(version: 20161115232827) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -95,8 +95,9 @@ ActiveRecord::Schema.define(version: 20161114193937) do
   create_table "surveys", force: :cascade do |t|
     t.string   "name"
     t.text     "description"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.integer  "first_question_id"
   end
 
   add_foreign_key "question_orders", "questions"

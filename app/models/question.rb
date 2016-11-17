@@ -11,6 +11,7 @@
 
 class Question < ActiveRecord::Base
   has_one :question_order
+  has_one :survey
   has_many :responses
   has_many :response_choices
 
