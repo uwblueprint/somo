@@ -1,6 +1,8 @@
 #Somo
 
-[![CircleCI](https://circleci.com/gh/uwblueprint/somo.svg?style=svg)](https://circleci.com/gh/uwblueprint/somo)
+[![CircleCI](https://circleci.com/gh/uwblueprint/somo.svg?style=shield)](https://circleci.com/gh/uwblueprint/somo)
+[![Code Climate](https://codeclimate.com/github/uwblueprint/somo/badges/gpa.svg)](https://codeclimate.com/github/uwblueprint/somo)
+[![Test Coverage](https://codeclimate.com/github/uwblueprint/somo/badges/coverage.svg)](https://codeclimate.com/github/uwblueprint/somo/coverage)
 
 ## Development
 
