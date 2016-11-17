@@ -44,3 +44,7 @@ bower.json
 # Vim stuff
 *.swp
 *.swo
+
+# RubyMine stuff
+.idea
+.cleanup.yml
