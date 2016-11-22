@@ -25,8 +25,11 @@ gem 'turbolinks'
 gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
-# Google OAuth gem
+# Authentication gems
 gem "omniauth-google-oauth2"
+gem "omniauth-google"
+gem 'devise'
+gem 'omniauth'
 
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :jruby]
 # Use ActiveModel has_secure_password

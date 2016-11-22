@@ -1,14 +1,16 @@
 Rails.application.routes.draw do
-  get 'sessions/create'
+  get 'pages/home'
 
-  get 'sessions/destroy'
+  get 'pages/secure'
 
-  # Google auth
-  get 'auth/:provider/callback', to: 'sessions#create'
-  get 'auth/failure', to: redirect('/')
-  get 'signout', to: 'sessions#destroy', as: 'signout'
+  Rails.application.routes.draw do
+    root to: 'pages#home'
+    get 'pages/secure'
+  end
+  
+  devise_for :users, controllers: { omniauth_callbacks: "users/omniauth_callbacks" }
 
-  resources :sessions, only: [:create, :destroy]
+  get '/', to: 'omniauth_callbacks#google_oauth2'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
