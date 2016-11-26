@@ -7,6 +7,8 @@ gem 'rails', '4.2.7.1'
 gem 'pg', '~> 0.15'
 # Twilio
 gem 'twilio-ruby'
+# Validate, display and save phone numbers https://github.com/joost/phony_rails
+gem 'phony_rails'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
@@ -44,8 +46,14 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :jruby]
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
+  gem 'database_cleaner'
   gem 'factory_girl_rails'
   gem 'rspec-rails'
+end
+
+group :test do
+  gem "simplecov"
+  gem "codeclimate-test-reporter", "~> 1.0.0"
 end
 
 group :development do

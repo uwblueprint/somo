@@ -40,3 +40,11 @@ bower.json
 
 # Ignore Byebug command history file.
 .byebug_history
+
+# Vim stuff
+*.swp
+*.swo
+
+# RubyMine stuff
+.idea
+.cleanup.yml
