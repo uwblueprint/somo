@@ -49,3 +49,17 @@ We are currently running on Ruby 2.3, Rails 4, and PostgreSQL 9.4. [Homebrew](ht
 6. `rails server` and go to `localhost:3000`
 
 7. Run `rspec` in the root directory to run the specs.
+
+### Style Guide
+1. Strings
+  * Use single quotes instead of double quotes.
+2. Hashes
+  * Prefer `:` over `=>`.
+3. Indentation
+  * Use 2 spaces.
+  * There should be no use of tabs.
+4. Spacing
+  * There should be no trailing whitespace.
+  * There should be no empty new lines at the end of a file.
+5. Line length
+  * The maximum number of characters per line should be 100.
