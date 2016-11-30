@@ -17,4 +17,8 @@ class Survey < ActiveRecord::Base
   belongs_to :first_question, foreign_key: :first_question_id, class_name: 'Question'
 
   validates :description, :name, presence: true
+
+  def is_sendable?
+    return !first_question.nil?
+  end
 end

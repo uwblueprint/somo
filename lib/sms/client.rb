@@ -1,11 +1,13 @@
 require 'twilio-ruby'
 
-module SMS
+module Sms
   class Client
+    include Singleton
+
     def initialize
       @client = Twilio::REST::Client.new(
-        Rails.application.secrets.twilio_account_id,
-        Rails.application.secrets.twilio_auth_token,
+        Rails.application.secrets.twilio_account_id || '',
+        Rails.application.secrets.twilio_auth_token || '',
       )
       @somo_phone_number = Rails.application.secrets.somo_phone_number
     end

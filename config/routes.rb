@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   # Survey Routes
   resources :surveys do
     member do
-      post 'send_survey'
+      post 'send', action: :send_survey
     end
   end
 
