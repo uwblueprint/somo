@@ -1,0 +1,2 @@
+class DefaultQuestionOrder < QuestionOrder
+end

@@ -11,31 +11,35 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161123225136) do
+ActiveRecord::Schema.define(version: 20161203202645) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "question_orders", force: :cascade do |t|
-    t.integer  "survey_id"
     t.integer  "question_id"
     t.integer  "next_question_id"
     t.integer  "response_choice_id"
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
+    t.string   "type",               null: false
   end
 
   add_index "question_orders", ["next_question_id"], name: "index_question_orders_on_next_question_id", using: :btree
   add_index "question_orders", ["question_id"], name: "index_question_orders_on_question_id", using: :btree
   add_index "question_orders", ["response_choice_id"], name: "index_question_orders_on_response_choice_id", using: :btree
-  add_index "question_orders", ["survey_id"], name: "index_question_orders_on_survey_id", using: :btree
 
   create_table "questions", force: :cascade do |t|
     t.text     "text"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
     t.string   "question_type"
+    t.integer  "number"
+    t.integer  "survey_id"
   end
+
+  add_index "questions", ["number"], name: "index_questions_on_number", using: :btree
+  add_index "questions", ["survey_id"], name: "index_questions_on_survey_id", using: :btree
 
   create_table "respondents", force: :cascade do |t|
     t.string   "name"
@@ -104,7 +108,7 @@ ActiveRecord::Schema.define(version: 20161123225136) do
   add_foreign_key "question_orders", "questions"
   add_foreign_key "question_orders", "questions", column: "next_question_id"
   add_foreign_key "question_orders", "response_choices"
-  add_foreign_key "question_orders", "surveys"
+  add_foreign_key "questions", "surveys"
   add_foreign_key "response_choices", "questions"
   add_foreign_key "responses", "questions"
   add_foreign_key "responses", "respondents"

@@ -2,11 +2,12 @@ FactoryGirl.define do
   factory :question do
     text 'hello world?'
     question_type 'short_answer'
+    number 1
   end
 
-  trait :with_question_order do
+  trait :with_default_question_order do
     after(:create) do |question|
-      create(:question_order, question: question)
+      create(:default_question_order, question: question)
     end
   end
 

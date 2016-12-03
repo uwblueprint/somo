@@ -1,4 +1,4 @@
-class SurveysController < ApplicationController
+class SurveysController < BaseController
 
   def send_survey
     phone_numbers = JSON.parse(params[:respondent_phone_numbers]).uniq
@@ -30,5 +30,67 @@ class SurveysController < ApplicationController
     initializer.execute
 
     head :ok
+  end
+
+  def create
+    @survey = Survey.create!(survey_params)
+
+    questions = params[:questions].map do |question_params|
+      question = Question.create!(
+        survey: @survey,
+        text: question_params[:text],
+        question_type: question_params[:question_type].downcase,
+        number: question_params[:id],
+      )
+
+      question_params[:options].each do |response_params|
+        ResponseChoice.create!(
+          question: question,
+          key: response_params[:key].downcase,
+          text: response_params[:text],
+        )
+      end
+
+      [
+        question_params[:id],
+        question
+      ]
+    end
+    questions = questions.to_h
+
+    @survey.update!(first_question: questions['1'])
+
+    params[:questions].each do |question_params|
+      if (question_params[:default_next_question_id].to_i == -1)
+        question_params[:options].each do |response_params|
+          if (questions.keys.include? response_params[:next_question_id])
+            ConditionalQuestionOrder.create!(
+              question: questions[question_params[:id]],
+              response_choice: questions[question_params[:id]].response_choices.find_by_key(response_params[:key]),
+              next_question: questions[response_params[:next_question_id]]
+            )
+          end
+        end
+      else
+        if (questions.keys.include? question_params[:default_next_question_id])
+          DefaultQuestionOrder.create!(
+            question: questions[question_params[:id]],
+            next_question: questions[question_params[:default_next_question_id]]
+          )
+        end
+      end
+    end
+
+    # TODO(dinah): remove this empty json when survey jbuilder is complete
+    render json: {}
+  end
+
+private
+
+  def survey_params
+    params.permit(
+      :name,
+      :description,
+    )
   end
 end

@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :response_choice do
     question
-    key 'A'
+    key 'a'
     text 'first choice'
   end
 end

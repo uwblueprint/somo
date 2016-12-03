@@ -14,5 +14,5 @@ class ResponseChoice < ActiveRecord::Base
   belongs_to :question
   has_one :question_order
 
-  validates :key, presence: true, inclusion: {in: %w[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z]}
+  validates :key, presence: true, format: { with: /[a-z]/ }
 end

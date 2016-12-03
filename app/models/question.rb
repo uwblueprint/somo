@@ -4,18 +4,22 @@
 #
 #  id                                   :integer          not null, primary key
 #  text                                 :text
+#  number                               :integer
+#  question_type                        :string
+#  survey_id                            :integer
 #  created_at                           :datetime         not null
 #  updated_at                           :datetime         not null
-#  question_type                        :string
 #
 
 class Question < ActiveRecord::Base
-  has_one :question_order
-  has_one :survey
+  has_many :question_orders, inverse_of: :question
   has_many :responses
   has_many :response_choices
 
-  validates :text, presence: true
+  belongs_to :survey
 
-  validates :question_type, presence: true, inclusion: {in: %w[short_answer mc checkbox t_or_f]}
+  validates :text, presence: true
+  validates :number, presence: true, numericality: { only_integer: true }
+
+  validates :question_type, presence: true, inclusion: {in: %w[short_answer multiple_choice true_false]}
 end

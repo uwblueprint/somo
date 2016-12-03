@@ -7,7 +7,7 @@ describe ResponseChoice do
   end
 
   context "response_choice has invalid key" do
-    subject { FactoryGirl.build(:response_choice, key: "a") }
+    subject { FactoryGirl.build(:response_choice, key: "A") }
     it { is_expected.not_to be_valid }
   end
 end
