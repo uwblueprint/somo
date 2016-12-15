@@ -22,4 +22,13 @@ describe Survey do
       expect(subject.is_sendable?).to be true
     end
   end
+  
+  context 'formats as csv' do
+    subject { FactoryGirl.build(:survey, :with_responses) }
+
+    it 'compiles' do
+      subject.to_csv
+    end
+
+  end
 end
