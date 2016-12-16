@@ -3,6 +3,7 @@ FactoryGirl.define do
     text 'hello world?'
     question_type 'short_answer'
     number 1
+    survey
   end
 
   trait :with_default_question_order do

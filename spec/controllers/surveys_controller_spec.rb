@@ -2,8 +2,12 @@ require 'rails_helper'
 
 describe SurveysController, type: :controller do
   describe 'send survey validation' do
+    before(:each) do
+      allow_any_instance_of(Survey).to receive(:generate_models)
+    end
+
     it 'returns respondents is empty' do
-      FactoryGirl.create(:survey, id: 1)
+      FactoryGirl.create(:survey, :sendable, id: 1)
       post :send_survey, id: 1, respondent_phone_numbers: '[]'
 
       expect(response.status).to eq(400)
@@ -12,14 +16,14 @@ describe SurveysController, type: :controller do
     end
 
     it 'respondents is created' do
-      FactoryGirl.create(:survey, id: 1)
+      FactoryGirl.create(:survey, :sendable, id: 1)
       expect {
         post :send_survey, id: 1, respondent_phone_numbers: '["1-647-111-1111"]'
       }.to change { Respondent.count }.by(1)
     end
 
     it 'respondents is not created' do
-      FactoryGirl.create(:survey, id: 1)
+      FactoryGirl.create(:survey, :sendable, id: 1)
       FactoryGirl.create(:respondent, phone_number: '1-647-111-1111')
       expect {
         post :send_survey, id: 1, respondent_phone_numbers: '["16471111111"]'
@@ -35,7 +39,7 @@ describe SurveysController, type: :controller do
     end
 
     it 'returns survey is not sendable when first question doesn\'t exist' do
-      FactoryGirl.create(:survey, id: 1, first_question: nil)
+      FactoryGirl.create(:survey, id: 1)
       FactoryGirl.create(:respondent, phone_number: '1-647-111-1111')
       post :send_survey, id: 1, respondent_phone_numbers: '["1-647-111-1111"]'
 
@@ -45,8 +49,11 @@ describe SurveysController, type: :controller do
     end
 
     it 'returns respondent has survey in progress' do
-      FactoryGirl.create(:respondent, :with_survey_execution_state, phone_number: '1-647-111-1111')
-      post :send_survey, id: 1, respondent_phone_numbers: '["1-647-111-1111"]'
+      survey = FactoryGirl.create(:survey, :sendable)
+      respondent = FactoryGirl.create(:respondent, phone_number: '1-647-111-1111')
+      FactoryGirl.create(:survey_execution_state, survey: survey, respondent: respondent)
+
+      post :send_survey, id: survey.id, respondent_phone_numbers: '["1-647-111-1111"]'
 
       expect(response.status).to eq(400)
       json = JSON.parse(response.body)
@@ -54,7 +61,7 @@ describe SurveysController, type: :controller do
     end
 
     it 'send survey success single respondent' do
-      FactoryGirl.create(:survey, id: 1)
+      FactoryGirl.create(:survey, :sendable, id: 1)
       FactoryGirl.create(:respondent, phone_number: '1-647-111-1111')
 
       post :send_survey, id: 1, respondent_phone_numbers: '["1-647-111-1111"]'
@@ -63,13 +70,22 @@ describe SurveysController, type: :controller do
     end
 
     it 'send survey success multiple respondents' do
-      FactoryGirl.create(:survey, id: 1)
+      FactoryGirl.create(:survey, :sendable, id: 1)
       FactoryGirl.create(:respondent, phone_number: '1-647-111-1111')
       FactoryGirl.create(:respondent, phone_number: '1-647-111-1112')
       FactoryGirl.create(:respondent, phone_number: '1-647-111-1113')
 
       post :send_survey, id: 1, respondent_phone_numbers: '["1-647-111-1111", "1-647-111-1112", "1-647-111-1113"]'
       expect(response.status).to eq(200)
+    end
+
+    it 'returns status code 422 for invalid survey parameters' do
+      survey = FactoryGirl.create(:survey, :sendable, id: 1)
+      allow_any_instance_of(Survey).to receive(:generate_models).and_raise(ActiveRecord::RecordInvalid.new(survey))
+      post :send_survey, id: 1, respondent_phone_numbers: '["1-647-111-1111"]'
+
+      expect(response.status).to eq(422)
+      expect(response_json[:error_type]).to eq('record_invalid')
     end
   end
 
@@ -117,77 +133,34 @@ describe SurveysController, type: :controller do
     end
 
     it 'returns http success' do
-      get :create, params
+      post :create, params.merge(format: :json)
       expect(response).to have_http_status(:success)
     end
 
     it 'creates a new survey' do
-      expect{ get :create, params}.to change{Survey.count}.by(1)
+      expect{ post :create, params.merge(format: :json) }.to change{Survey.count}.by(1)
     end
 
-    it 'creates three new questions' do
-      expect{ get :create, params}.to change{Question.count}.by(3)
+    it 'copies params to survey.parameters' do
+      post :create, params.merge(format: :json)
+      expect(Survey.last.parameters.to_json).to eq(params.to_json)
     end
 
-    it 'creates three new response choices' do
-      expect{ get :create, params}.to change{ResponseChoice.count}.by(3)
+    it 'handles missing parameters' do
+      missing_params = {
+        name: 'My first survey',
+        description: 'This is my first survey',
+        questions: []
+      }
+
+      expect{ post :create, missing_params.merge(format: :json) }.to change{Survey.count}.by(1)
+      expect(Survey.last.parameters.to_json).to eq(missing_params.to_json)
     end
 
-    it 'creates two new question orders' do
-      expect{ get :create, params}.to change{QuestionOrder.count}.by(2)
-    end
-
-    it 'has the right first question' do
-      get :create, params
-
-      expect(Survey.last.first_question.number).to eq(1)
-      expect(Survey.last.first_question.text).to eq('What is your name?')
-    end
-
-    it 'creates default question orders' do
-      get :create, params
-
-      survey = Survey.last
-      expect(survey.first_question.question_orders.size).to eq(1)
-      expect(survey.first_question.question_orders.first).to be_a(DefaultQuestionOrder)
-      expect(survey.first_question.question_orders.first.next_question.number).to be(2)
-    end
-
-    it 'creates conditional question orders' do
-      get :create, params
-
-      question = Survey.last.questions.find_by_number(2)
-      expect(question.question_orders.size).to eq(1)
-      expect(question.question_orders.first).to be_a(ConditionalQuestionOrder)
-      expect(question.question_orders.first.response_choice).to_not be_nil
-      expect(question.question_orders.first.next_question).to eq(Question.last)
-    end
-
-    it 'parses last question with default question order' do
-      get :create, params
-
-      question = Question.last
-      expect(question.question_orders).to be_empty
-    end
-
-    context 'with missing params' do
-      it 'returns status code 422' do
-        params[:name] = nil
-        get :create, params
-
-        expect(response.status).to eq(422)
-        expect(response_json[:error_type]).to eq('record_invalid')
-      end
-    end
-
-    context 'with invalid params' do
-      it 'returns status code 422' do
-        params[:questions].first[:question_type] = 'invalid_question_type'
-        get :create, params
-
-        expect(response.status).to eq(422)
-        expect(response_json[:error_type]).to eq('record_invalid')
-      end
+    it 'filters out bad parameters' do
+      params[:unexpected] = 'foobar'
+      post :create, params.merge(format: :json)
+      expect(Survey.last.parameters).not_to include('unexpected')
     end
   end
 end
