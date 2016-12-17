@@ -2,11 +2,11 @@ require 'rails_helper'
 
 describe SurveysController, :type => :routing do
   # TODO(dinah): uncomment when surveys#show is implemented
-  # it "get surveys routes properly" do
-  #   expect(get("/surveys/1")).to route_to(
-  #     :controller => "surveys",
-  #     :action => "show",
-  #     :id => "1"
+  # it 'get surveys routes properly' do
+  #   expect(get('/surveys/1')).to route_to(
+  #     controller: 'surveys',
+  #     action: 'show',
+  #     id: '1'
   #   )
   # end
 
@@ -14,20 +14,19 @@ describe SurveysController, :type => :routing do
     expect(post('/surveys')).to route_to('surveys#create')
   end
 
-  # TODO(dinah): uncomment when surveys#update is implemented
-  # it "put surveys routes properly" do
-  #   expect(put("/surveys/1")).to route_to(
-  #     :controller => "surveys",
-  #     :action => "update",
-  #     :id => "1"
-  #   )
-  # end
+  it 'put surveys routes properly' do
+    expect(put('/surveys/1')).to route_to(
+      controller: 'surveys',
+      action: 'update',
+      id: '1',
+    )
+  end
 
   it 'send surveys routes properly' do
     expect(post('/surveys/1/send')).to route_to(
-      :controller => 'surveys',
-      :action => 'send_survey',
-      :id => '1'
+      controller: 'surveys',
+      action: 'send_survey',
+      id: '1'
     )
   end
 end

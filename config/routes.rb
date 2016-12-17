@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   post 'sms/received_user_response' => :received_user_response, controller: 'sms'
 
   # Survey Routes
-  resources :surveys, only: [:create] do
+  resources :surveys, only: [:create, :update] do
     member do
       post 'send', action: :send_survey
     end

@@ -163,4 +163,92 @@ describe SurveysController, type: :controller do
       expect(Survey.last.parameters).not_to include('unexpected')
     end
   end
+
+  describe 'PUT #update' do
+    let!(:survey) { FactoryGirl.create(:survey, parameters: '{}') }
+    let(:params) do
+      {
+        id: survey.id,
+        name: 'My first survey',
+        description: 'This is my updated survey',
+        questions: [
+          {
+            id: 1,
+            text: 'What is your name?',
+            question_type: 'short_answer',
+            default_next_question_id: 2,
+            options: [],
+          }, {
+            id: 2,
+            text: 'Do you like cats?',
+            question_type: 'multiple_choice',
+            default_next_question_id: -1,
+            options: [
+              {
+                key: 'a',
+                text: 'Yes',
+                next_question_id: -1,
+              }, {
+                key: 'b',
+                text: 'No',
+                next_question_id: -1,
+              }, {
+                key: 'c',
+                text: 'Undecided',
+                next_question_id: -1,
+              }
+            ]
+          }
+        ],
+      }
+    end
+
+    it 'returns 404 for unknown id' do
+      params[:id] = -1
+      put :update, params.merge(format: :json)
+
+      expect(response.status).to eq(404)
+      expect(response_json[:error_type]).to eq('record_not_found')
+    end
+
+    it 'returns 423 for sent survey' do
+      allow_any_instance_of(Survey).to receive(:was_sent?).and_return(true)
+      put :update, params.merge(format: :json)
+
+      expect(response.status).to eq(423)
+      expect(response_json[:error_type]).to eq('locked_resource_error')
+    end
+
+    it 'returns http success' do
+      put :update, params.merge(format: :json)
+      expect(response).to have_http_status(:success)
+    end
+
+    it 'does not create a new survey' do
+      expect{ put :update, params.merge(format: :json) }.not_to change{Survey.count}
+    end
+
+    it 'copies params to survey.parameters' do
+      put :update, params.merge(format: :json)
+      expect(Survey.last.parameters.to_json).to eq(params.except(:id).to_json)
+    end
+
+    it 'handles missing parameters' do
+      missing_params = {
+        id: survey.id,
+        name: 'My first survey',
+        description: 'This is my first survey',
+        questions: []
+      }
+
+      post :update, missing_params.merge(format: :json)
+      expect(Survey.last.parameters.to_json).to eq(missing_params.except(:id).to_json)
+    end
+
+    it 'filters out bad parameters' do
+      params[:unexpected] = 'foobar'
+      post :update, params.merge(format: :json)
+      expect(Survey.last.parameters).not_to include('unexpected')
+    end
+  end
 end

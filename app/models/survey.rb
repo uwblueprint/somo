@@ -14,12 +14,17 @@
 
 class Survey < ActiveRecord::Base
   has_many :questions
+  has_many :survey_execution_states
   has_many :survey_responses
 
   belongs_to :first_question, foreign_key: :first_question_id, class_name: 'Question'
 
   def is_sendable?
     first_question.present?
+  end
+
+  def was_sent?
+    survey_execution_states.present?
   end
 
   def generate_models
