@@ -28,7 +28,7 @@ class SurveysController < BaseController
       return render json: {error: :respondents_has_survey_in_progress}, status: :bad_request
     end
 
-    initializer = SurveyExecution::Initializer.new(@survey, respondents)
+    initializer = SurveyExecution::Initializer.new(Sms::Client.instance, @survey, respondents)
     initializer.execute
 
     head :ok

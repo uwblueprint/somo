@@ -16,6 +16,7 @@ describe SurveysController, type: :controller do
     end
 
     it 'respondents is created' do
+      allow_any_instance_of(Sms::Client).to receive(:send)
       FactoryGirl.create(:survey, :sendable, id: 1)
       expect {
         post :send_survey, id: 1, respondent_phone_numbers: '["1-647-111-1111"]'
@@ -23,6 +24,7 @@ describe SurveysController, type: :controller do
     end
 
     it 'respondents is not created' do
+      allow_any_instance_of(Sms::Client).to receive(:send)
       FactoryGirl.create(:survey, :sendable, id: 1)
       FactoryGirl.create(:respondent, phone_number: '1-647-111-1111')
       expect {
@@ -61,6 +63,7 @@ describe SurveysController, type: :controller do
     end
 
     it 'send survey success single respondent' do
+      allow_any_instance_of(Sms::Client).to receive(:send)
       FactoryGirl.create(:survey, :sendable, id: 1)
       FactoryGirl.create(:respondent, phone_number: '1-647-111-1111')
 
@@ -70,6 +73,7 @@ describe SurveysController, type: :controller do
     end
 
     it 'send survey success multiple respondents' do
+      allow_any_instance_of(Sms::Client).to receive(:send)
       FactoryGirl.create(:survey, :sendable, id: 1)
       FactoryGirl.create(:respondent, phone_number: '1-647-111-1111')
       FactoryGirl.create(:respondent, phone_number: '1-647-111-1112')

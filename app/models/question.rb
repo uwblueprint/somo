@@ -22,4 +22,10 @@ class Question < ActiveRecord::Base
   validates :number, presence: true, numericality: { only_integer: true }
 
   validates :question_type, presence: true, inclusion: {in: %w[short_answer multiple_choice true_false]}
+
+  def formatted_question_and_responses
+    # TODO (Chris) will implement later since it's pretty complex
+    # has to get responses too
+    text
+  end
 end

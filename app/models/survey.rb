@@ -23,6 +23,11 @@ class Survey < ActiveRecord::Base
     first_question.present?
   end
 
+  def welcome_message
+    # TODO (Chris): Ensure Nick implements this function
+    name
+  end
+
   def was_sent?
     survey_execution_states.present?
   end

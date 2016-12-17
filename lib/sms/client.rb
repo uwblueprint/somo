@@ -12,7 +12,7 @@ module Sms
       @somo_phone_number = Rails.application.secrets.somo_phone_number
     end
 
-    def send(message, phone_number)
+    def send(phone_number, message)
       @client.account.messages.create({
         :to => phone_number,
         :from => @somo_phone_number,
