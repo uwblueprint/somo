@@ -14,7 +14,7 @@ RSpec.describe Response, type: :model do
   context 'is valid with survey_response' do
     subject { FactoryGirl.build(:response, :with_survey_response)}
     it {
-      expect(subject).to be_valid
+      is_expected.to be_valid
       expect(subject.survey_response).not_to be_nil
     }
   end

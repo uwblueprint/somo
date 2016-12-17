@@ -20,12 +20,32 @@ class Question < ActiveRecord::Base
 
   validates :text, presence: true
   validates :number, presence: true, numericality: { only_integer: true }
-
   validates :question_type, presence: true, inclusion: {in: %w[short_answer multiple_choice true_false]}
 
   def formatted_question_and_responses
     # TODO (Chris) will implement later since it's pretty complex
-    # has to get responses too
+    # involves getting the responses too
     text
+  end
+
+  def is_response_valid?(response)
+    if response_choices.exists?
+      return response_choices.map(&:key).include? response.answer
+    else
+      true
+    end
+  end
+
+  def next_question(response)
+    if response_choices.exists?
+      response_choices.each do |response_choice|
+        if response_choice.question_order.present? && response_choice.key == response.answer
+          return response_choice.question_order.next_question
+        end
+      end
+    elsif question_orders.exists?
+      return question_orders.first.next_question
+    end
+    nil
   end
 end

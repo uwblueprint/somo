@@ -2,7 +2,7 @@ FactoryGirl.define do
   factory :response do
     question
     respondent
-    answer 'My answer'
+    answer 'a'
   end
 
   trait :with_survey_response do

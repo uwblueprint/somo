@@ -52,9 +52,7 @@ describe SurveysController, type: :controller do
 
     it 'returns respondent has survey in progress' do
       survey = FactoryGirl.create(:survey, :sendable)
-      respondent = FactoryGirl.create(:respondent, phone_number: '1-647-111-1111')
-      FactoryGirl.create(:survey_execution_state, survey: survey, respondent: respondent)
-
+      FactoryGirl.create(:respondent, :with_survey_execution_state, phone_number: '1-647-111-1111')
       post :send_survey, id: survey.id, respondent_phone_numbers: '["1-647-111-1111"]'
 
       expect(response.status).to eq(400)

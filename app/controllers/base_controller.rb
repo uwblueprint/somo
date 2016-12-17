@@ -1,5 +1,14 @@
 class BaseController < ApplicationController
 
+  class ModelNotFoundError < StandardError
+  end
+
+  class RespondentNotFoundError < ModelNotFoundError
+  end
+
+  class SurveyExecutionStateNotFoundError < ModelNotFoundError
+  end
+
   class LockedResourceError < StandardError
   end
 
@@ -9,6 +18,10 @@ class BaseController < ApplicationController
 
   rescue_from ActiveRecord::RecordInvalid do |e|
     render json: format_error(e), status: 422
+  end
+
+  rescue_from ModelNotFoundError do |e|
+    render json: format_error(e), status: 404
   end
 
   rescue_from LockedResourceError do |e|

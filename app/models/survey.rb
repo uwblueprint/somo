@@ -32,6 +32,14 @@ class Survey < ActiveRecord::Base
     survey_execution_states.present?
   end
 
+  def welcome_message
+    'Welcome to one of Somo\'s surveys!'
+  end
+
+  def finished_message
+    'Thanks for completing the survey!'
+  end
+
   def generate_models
     self.update!(
       name: parameters['name'],

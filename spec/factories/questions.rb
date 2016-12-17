@@ -13,6 +13,9 @@ FactoryGirl.define do
   end
 
   trait :with_conditional_question_order do
+    before(:create) do |question|
+      question.question_type = 'multiple_choice'
+    end
     after(:create) do |question|
       rc = create(:response_choice, question: question)
       create(:conditional_question_order, question: question, response_choice: rc)

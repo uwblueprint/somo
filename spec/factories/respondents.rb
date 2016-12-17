@@ -6,7 +6,7 @@ FactoryGirl.define do
 
   trait :with_survey_execution_state do
     after(:create) do |respondent|
-      create(:survey_execution_state, :respondent => respondent)
+      create(:survey_execution_state, respondent: respondent)
     end
   end
 end
