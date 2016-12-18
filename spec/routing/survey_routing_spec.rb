@@ -1,6 +1,14 @@
 require 'rails_helper'
 
 describe SurveysController, :type => :routing do
+
+  it 'get all surveys routes properly' do
+    expect(get('/surveys')).to route_to(
+      controller: 'surveys',
+      action: 'index'
+    )
+  end
+
   it 'get surveys routes properly' do
     expect(get('/surveys/1')).to route_to(
       controller: 'surveys',

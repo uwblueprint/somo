@@ -14,6 +14,56 @@ describe Survey do
     end
   end
 
+  describe '#metadata' do
+
+    context 'survey with no parameters' do
+      it 'returns metadata successfully' do
+        subject{ FactoryGirl.create(:survey) }
+        expect(subject.metadata).to eq({
+          id: -1,
+          name: '(No title)',
+          description: '(No description)',
+          number_of_questions: 0
+        })
+      end
+    end
+
+    context 'survey with parameters' do
+      let(:params) do
+        {
+          name: 'My first survey',
+          description: 'This is my first survey',
+          questions: [
+            {
+              id: 1,
+              text: 'What is your name?',
+              question_type: 'short_answer',
+              default_next_question_id: 2,
+              options: []
+            },
+            {
+              id: 2,
+              text: 'Is fire hot?',
+              question_type: 'short_answer',
+              default_next_question_id: -1,
+              options: []
+            }
+          ]
+        }
+      end
+
+      it 'returns successful metadata' do
+        survey = FactoryGirl.create(:survey, id: 1, parameters: params)
+        expect(survey.metadata).to eq({
+          id: 1,
+          name: 'My first survey',
+          description: 'This is my first survey',
+          number_of_questions: 2
+        })
+      end
+    end
+  end
+
   describe '#generate_models' do
     subject{ FactoryGirl.create(:survey, name: '', description: '', parameters: params)}
 

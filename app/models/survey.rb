@@ -19,6 +19,8 @@ class Survey < ActiveRecord::Base
 
   belongs_to :first_question, foreign_key: :first_question_id, class_name: 'Question'
 
+  self.per_page = 10
+
   def is_sendable?
     first_question.present?
   end
@@ -38,6 +40,15 @@ class Survey < ActiveRecord::Base
 
   def finished_message
     'Thanks for completing the survey!'
+  end
+
+  def metadata
+    {
+      id: id || -1,
+      name: parameters.present? ? parameters['name'] : '(No title)',
+      description: parameters.present? ? parameters['description'] : '(No description)',
+      number_of_questions: parameters.present? ? parameters['questions'].length : 0
+    }
   end
 
   def generate_models

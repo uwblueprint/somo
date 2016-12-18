@@ -34,6 +34,12 @@ class SurveysController < BaseController
     head :ok
   end
 
+  def index
+    @surveys = Survey.page(params[:page]).order('created_at DESC')
+    surveys = @surveys.map { |survey| survey.metadata }
+    render json: { surveys: surveys }
+  end
+
   def show
     @survey = Survey.find(params[:id])
     render json: {id: @survey.id}.merge(@survey.parameters)

@@ -9,6 +9,8 @@ gem 'pg', '~> 0.15'
 gem 'twilio-ruby'
 # Validate, display and save phone numbers https://github.com/joost/phony_rails
 gem 'phony_rails'
+# For pagination https://github.com/mislav/will_paginate
+gem 'will_paginate', '~> 3.1.0'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'

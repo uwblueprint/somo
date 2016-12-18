@@ -307,4 +307,126 @@ describe SurveysController, type: :controller do
       expect(response_json[:questions].size).to eq(2)
     end
   end
+
+  describe 'GET #index' do
+    let(:first_survey_parameters) {
+      {
+        name: 'My first survey',
+        description: 'This is my first survey',
+        questions: [
+          {
+            id: 1,
+            text: 'What is your name?',
+            question_type: 'short_answer',
+            default_next_question_id: 2,
+            options: [],
+          }
+        ]
+      }
+    }
+
+    let(:second_survey_parameters) {
+      {
+        name: 'Second survey',
+        description: 'This is my second survey',
+        questions: []
+      }
+    }
+
+    let(:first_expected_survey) {
+      {
+        id: 1,
+        name: 'My first survey',
+        description: 'This is my first survey',
+        number_of_questions: 1
+      }
+    }
+
+    let(:second_expected_survey) {
+      {
+        id: 2,
+        name: 'Second survey',
+        description: 'This is my second survey',
+        number_of_questions: 0
+      }
+    }
+
+    context 'no surveys' do
+      it 'returns http success' do
+        get :index
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'returns empty response' do
+        get :index
+        expect(response.body).to eq({ surveys: [] }.to_json)
+      end
+    end
+
+    context 'single survey' do
+      before(:each)  do
+        FactoryGirl.create(:survey, id: 1, parameters: first_survey_parameters.to_json)
+        get :index
+      end
+
+      it 'returns http success' do
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'returns surveys response' do
+        expect(response.body).to eq({ surveys: [first_expected_survey] }.to_json)
+      end
+    end
+
+    context 'multiple surveys' do
+
+      before(:each)  do
+        FactoryGirl.create(:survey, id: 1, parameters: first_survey_parameters.to_json)
+        FactoryGirl.create(:survey, id: 2, parameters: second_survey_parameters.to_json)
+        get :index
+      end
+
+      it 'returns http success' do
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'returns two surveys response' do
+        expect(response.body).to eq(
+          { surveys: [second_expected_survey, first_expected_survey] }.to_json)
+      end
+    end
+
+    context 'pagination for surveys' do
+      before(:each) do
+        for i in 1..11
+          FactoryGirl.create(:survey, id: i, parameters:first_survey_parameters.to_json)
+        end
+      end
+
+      it 'returns http success for first page' do
+        get :index, { page: 1 }
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'returns first page for surveys response' do
+        get :index, { page: 1 }
+        surveys = JSON.parse(response.body)['surveys']
+        expect(surveys.length).to eq(10)
+        expect(surveys.first['id']).to eq(11)
+        expect(surveys.last['id']).to eq(2)
+      end
+
+      it 'returns http success for second page' do
+        get :index, { page: 2 }
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'returns second page for surveys response' do
+        get :index, { page: 2 }
+        surveys = JSON.parse(response.body)['surveys']
+        expect(surveys.length).to eq(1)
+        expect(surveys.first['id']).to eq(1)
+      end
+    end
+  end
 end
