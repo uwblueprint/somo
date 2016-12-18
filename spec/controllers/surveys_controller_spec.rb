@@ -91,6 +91,46 @@ describe SurveysController, type: :controller do
     end
   end
 
+  describe 'GET #show' do
+    let(:survey_parameters) do
+      {
+        name: 'My first survey',
+        description: 'This is my first survey',
+        questions: [
+          {
+            id: 1,
+            text: 'What is your name?',
+            question_type: 'short_answer',
+            default_next_question_id: 2,
+            options: [],
+          }
+        ]
+      }
+    end
+    let(:survey){ FactoryGirl.create(:survey, parameters: survey_parameters.to_json) }
+    let(:request_params){ {id: survey.id} }
+
+    it 'returns http success' do
+      get :show, request_params.merge(format: :json)
+      expect(response).to have_http_status(:success)
+    end
+
+    it 'returns 404 for unknown id' do
+      request_params[:id] = -1
+      get :show, request_params.merge(format: :json)
+
+      expect(response.status).to eq(404)
+      expect(response_json[:error_type]).to eq('record_not_found')
+    end
+
+    it 'returns parameters from survey model' do
+      get :show, request_params.merge(format: :json)
+      expect(response_json[:id]).to eq(survey.id)
+      expect(response_json[:name]).to eq('My first survey')
+      expect(response_json[:questions].size).to eq(1)
+    end
+  end
+
   describe 'POST #create' do
     let(:params) do
       {
@@ -137,6 +177,13 @@ describe SurveysController, type: :controller do
     it 'returns http success' do
       post :create, params.merge(format: :json)
       expect(response).to have_http_status(:success)
+    end
+
+    it 'returns parameters from survey model' do
+      post :create, params.merge(format: :json)
+      expect(response_json).to include('id')
+      expect(response_json[:name]).to eq('My first survey')
+      expect(response_json[:questions].size).to eq(3)
     end
 
     it 'creates a new survey' do
@@ -251,6 +298,13 @@ describe SurveysController, type: :controller do
       params[:unexpected] = 'foobar'
       post :update, params.merge(format: :json)
       expect(Survey.last.parameters).not_to include('unexpected')
+    end
+
+    it 'returns parameters from survey model' do
+      post :update, params.merge(format: :json)
+      expect(response_json[:id]).to eq(survey.id)
+      expect(response_json[:name]).to eq('My first survey')
+      expect(response_json[:questions].size).to eq(2)
     end
   end
 end

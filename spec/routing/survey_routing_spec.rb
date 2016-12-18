@@ -1,14 +1,13 @@
 require 'rails_helper'
 
 describe SurveysController, :type => :routing do
-  # TODO(dinah): uncomment when surveys#show is implemented
-  # it 'get surveys routes properly' do
-  #   expect(get('/surveys/1')).to route_to(
-  #     controller: 'surveys',
-  #     action: 'show',
-  #     id: '1'
-  #   )
-  # end
+  it 'get surveys routes properly' do
+    expect(get('/surveys/1')).to route_to(
+      controller: 'surveys',
+      action: 'show',
+      id: '1'
+    )
+  end
 
   it 'post surveys routes properly' do
     expect(post('/surveys')).to route_to('surveys#create')

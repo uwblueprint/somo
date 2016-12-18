@@ -34,20 +34,21 @@ class SurveysController < BaseController
     head :ok
   end
 
+  def show
+    @survey = Survey.find(params[:id])
+    render json: {id: @survey.id}.merge(@survey.parameters)
+  end
+
   def create
     @survey = Survey.create!(parameters: survey_params)
-
-    # TODO(dinah): remove this empty json when survey jbuilder is complete
-    render json: {}
+    render json: {id: @survey.id}.merge(@survey.parameters)
   end
 
   def update
     @survey = Survey.find(params[:id])
     raise LockedResourceError if @survey.was_sent?
     @survey.update!(parameters: survey_params)
-
-    # TODO(dinah): remove this empty json when survey jbuilder is complete
-    render json: {}
+    render json: {id: @survey.id}.merge(@survey.parameters)
   end
 
 private
