@@ -60,13 +60,13 @@ class Survey < ActiveRecord::Base
     questions = generate_questions_and_response_choices(parameters['questions'])
     self.update!(first_question: questions[1])
 
-    parameters['questions'].each do |question_params|
+    parameters['questions'].each_with_index do |question_params, i|
       if (question_params['default_next_question_id'].to_i == -1)
         question_params['options'].each do |response_params|
           if (questions.keys.include? response_params['next_question_id'])
             ConditionalQuestionOrder.create!(
-              question: questions[question_params['id']],
-              response_choice: questions[question_params['id']].response_choices.find_by_key(response_params['key']),
+              question: questions[i + 1],
+              response_choice: questions[i + 1].response_choices.find_by_key(response_params['key']),
               next_question: questions[response_params['next_question_id']]
             )
           end
@@ -74,7 +74,7 @@ class Survey < ActiveRecord::Base
       else
         if (questions.keys.include? question_params['default_next_question_id'])
           DefaultQuestionOrder.create!(
-            question: questions[question_params['id']],
+            question: questions[i + 1],
             next_question: questions[question_params['default_next_question_id']]
           )
         end
@@ -85,12 +85,12 @@ class Survey < ActiveRecord::Base
 private
 
   def generate_questions_and_response_choices(params)
-    questions = params.map do |question_params|
+    questions = params.each_with_index.map do |question_params, i|
       question = Question.create!(
         survey: self,
         text: question_params['text'],
         question_type: question_params['question_type'].downcase,
-        number: question_params['id'],
+        number: i + 1,
       )
 
       question_params['options'].each do |response_params|
@@ -101,10 +101,7 @@ private
         )
       end
 
-      [
-        question_params['id'],
-        question
-      ]
+      [ i + 1, question ]
     end
 
     questions.to_h
