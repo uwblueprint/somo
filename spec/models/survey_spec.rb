@@ -24,10 +24,27 @@ describe Survey do
   end
   
   context 'formats as csv' do
-    subject { FactoryGirl.build(:survey, :with_responses) }
-
+    let(:respondent) { FactoryGirl.create(:respondent)}
+    let(:survey) { FactoryGirl.create(:survey)}
+    let(:survey_response) {FactoryGirl.create(:survey_response, survey: survey, respondent: respondent)}
+    let(:question1) {FactoryGirl.create(:question, survey: survey)}
+    let(:response) {FactoryGirl.create(:response, survey_response: survey_response, respondent: respondent, question: question1)}
+    
     it 'compiles' do
-      subject.to_csv
+      puts survey.survey_responses.size
+      puts survey.survey_responses.count
+      survey.survey_responses.each do |sur_resp|
+        puts "respondent: " + sur_resp.respondent
+        puts sur_resp.responses.collect{|r| r.text}
+      end
+
+      puts survey.questions.size
+      puts survey.questions.count
+      survey.questions.each do |q|
+        puts "question: #{q.text}"
+      end
+      
+      survey.to_csv
     end
 
   end

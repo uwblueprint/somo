@@ -27,10 +27,15 @@ class Survey < ActiveRecord::Base
     # Column headers: respondent-name, respondent-phone, question1, question2, etc 
     attributes = %w{name phone-number}.concat questions.collect{|q| q.text}
     puts attributes
+    puts "here"
+    puts questions
     CSV.generate(headers: true) do |csv|
       csv << attributes
+      puts "here2"
+      
       survey_responses.each do |sur_resp|
         puts sur_resp.respondent.name
+        puts sur_resp.responses.collect{|r| r.text}
         #csv << [sur_resp.respondent.name, sur_resp.respondent.phone_number].concat sur_resp.responses.collect{|r| r.text}
       end
     end

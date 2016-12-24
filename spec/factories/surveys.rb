@@ -10,11 +10,4 @@ FactoryGirl.define do
       create(:question, survey: survey)
     end
   end
-  
-  trait :with_responses do
-    after(:create) do |survey|
-      create(:question, survey: survey)
-      create(:response, survey: survey)
-    end
-  end
 end
