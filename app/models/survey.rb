@@ -22,4 +22,9 @@ class Survey < ActiveRecord::Base
   def is_sendable?
     return !first_question.nil?
   end
+
+  def welcome_message
+    return "Welcome to #{name} #{description}"    
+  end
+
 end
