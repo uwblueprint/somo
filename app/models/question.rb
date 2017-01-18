@@ -23,9 +23,7 @@ class Question < ActiveRecord::Base
   validates :question_type, presence: true, inclusion: {in: %w[short_answer multiple_choice true_false]}
 
   def formatted_question_and_responses
-    # TODO (Chris) will implement later since it's pretty complex
-    # involves getting the responses too
-    text
+    text + "\n" + response_choices.map{ |r| "#{r.key}) #{r.text}"}.join("\n")
   end
 
   def is_response_valid?(response)

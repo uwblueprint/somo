@@ -106,4 +106,22 @@ describe Question do
       end
     end
   end
+
+  context 'with response choices' do
+    subject { FactoryGirl.create(:question, :with_multiple_response_choices) }
+    let(:expected_string) {"hello world?\na) first choice\nb) second choice"}
+    
+    it 'renders string correctly' do
+      expect(subject.formatted_question_and_responses).to eq(expected_string)
+    end
+  end
+
+  context 'without response choices' do
+    subject { FactoryGirl.create(:question) }
+    let(:expected_string) {"hello world?\n"}
+    
+    it 'renders string correctly' do
+      expect(subject.formatted_question_and_responses).to eq(expected_string)
+    end
+  end
 end

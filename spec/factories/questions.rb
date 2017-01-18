@@ -27,4 +27,11 @@ FactoryGirl.define do
       create(:response_choice, question: question)
     end
   end
+  
+  trait :with_multiple_response_choices do
+    after(:create) do |question|
+      create(:response_choice, question: question)
+      create(:response_choice, question: question, key: 'b', text: 'second choice')
+    end
+  end
 end
