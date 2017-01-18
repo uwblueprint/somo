@@ -35,14 +35,12 @@ describe Survey do
           description: 'This is my first survey',
           questions: [
             {
-              id: 1,
               text: 'What is your name?',
               question_type: 'short_answer',
               default_next_question_id: 2,
               options: []
             },
             {
-              id: 2,
               text: 'Is fire hot?',
               question_type: 'short_answer',
               default_next_question_id: -1,
@@ -73,13 +71,11 @@ describe Survey do
         description: 'This is my first survey',
         questions: [
           {
-            id: 1,
             text: 'What is your name?',
             question_type: 'short_answer',
             default_next_question_id: 2,
             options: [],
           }, {
-            id: 2,
             text: 'Is fire hot?',
             question_type: 'true_false',
             default_next_question_id: 3,
@@ -95,7 +91,6 @@ describe Survey do
               }
             ],
           }, {
-            id: 3,
             text: 'Do you like cats?',
             question_type: 'multiple_choice',
             default_next_question_id: -1,
@@ -115,7 +110,6 @@ describe Survey do
               }
             ]
           }, {
-            id: 4,
             text: 'What is your favourite colour?',
             question_type: 'short_answer',
             default_next_question_id: -1,
